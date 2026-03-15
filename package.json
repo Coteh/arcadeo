@@ -59,12 +59,13 @@
   "files": [
     "dist/",
     "src/components/",
+    "src/plugins/",
     "src/registry.json"
   ],
   "scripts": {
     "build": "rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
-    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testPathPattern=src/components",
-    "test-ci": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --ci --testPathPattern=src/components",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "test-ci": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --ci",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

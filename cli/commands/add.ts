@@ -2,7 +2,7 @@ import { Command } from "commander";
 import fs from "fs-extra";
 import path from "path";
 import chalk from "chalk";
-import { getRegistry, type ComponentEntry } from "../registry";
+import { getRegistry, type ComponentEntry, type PluginEntry } from "../registry";
 
 interface ArcadeoConfig {
     srcDir: string;
@@ -62,17 +62,39 @@ function copyComponent(
     }
 }
 
+function copyPlugin(
+    plugin: PluginEntry,
+    arcadeoSrcDir: string
+): void {
+    for (const file of plugin.files) {
+        const srcPath = path.join(arcadeoSrcDir, file);
+        const destPath = path.join(
+            process.cwd(),
+            "plugins",
+            path.basename(file)
+        );
+
+        fs.ensureDirSync(path.dirname(destPath));
+        fs.copySync(srcPath, destPath);
+        console.log(
+            `  ${chalk.green("+")} ${path.relative(process.cwd(), destPath)}`
+        );
+    }
+}
+
 export const addCommand = new Command("add")
-    .description("Add a component to your project")
-    .argument("<component>", "Component name to add")
+    .description("Add a component or plugin to your project")
+    .argument("<component>", "Component or plugin name to add")
     .action((componentName: string) => {
-        const config = loadConfig();
         const registry = getRegistry();
 
-        if (!registry.components[componentName]) {
+        const isPlugin = Boolean(registry.plugins[componentName]);
+        const isComponent = Boolean(registry.components[componentName]);
+
+        if (!isComponent && !isPlugin) {
             console.error(
                 chalk.red(
-                    `Unknown component "${componentName}". Run "npx arcadeo list" to see available components.`
+                    `Unknown component or plugin "${componentName}". Run "npx arcadeo list" to see available items.`
                 )
             );
             process.exit(1);
@@ -97,17 +119,24 @@ export const addCommand = new Command("add")
             process.exit(1);
         }
 
-        const componentsToAdd = resolveDependencies(
-            componentName,
-            registry
-        );
+        if (isPlugin) {
+            const plugin = registry.plugins[componentName];
+            console.log(chalk.bold(`\nAdding plugin ${componentName}:\n`));
+            copyPlugin(plugin, arcadeoSrcDir);
+        } else {
+            const config = loadConfig();
+            const componentsToAdd = resolveDependencies(
+                componentName,
+                registry
+            );
 
-        console.log(chalk.bold(`\nAdding ${componentName}:\n`));
+            console.log(chalk.bold(`\nAdding ${componentName}:\n`));
 
-        for (const name of componentsToAdd) {
-            const component = registry.components[name];
-            if (component) {
-                copyComponent(component, config, arcadeoSrcDir);
+            for (const name of componentsToAdd) {
+                const component = registry.components[name];
+                if (component) {
+                    copyComponent(component, config, arcadeoSrcDir);
+                }
             }
         }
 
