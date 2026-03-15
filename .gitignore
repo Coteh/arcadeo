@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+storybook-static/
+
+# Vite local env files
+*.local
+.env
+.env.*
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test output
+coverage/
+results/

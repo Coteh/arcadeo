@@ -1,0 +1,62 @@
+{
+    "components": {
+        "game": {
+            "name": "game",
+            "description": "Core game state interfaces",
+            "files": ["components/game/index.ts"],
+            "dependencies": []
+        },
+        "storage": {
+            "name": "storage",
+            "description": "localStorage + file-based persistence",
+            "files": [
+                "components/storage/index.ts",
+                "components/storage/browser.ts",
+                "components/storage/cli.ts"
+            ],
+            "dependencies": ["game"]
+        },
+        "preferences": {
+            "name": "preferences",
+            "description": "Key-value preferences system",
+            "files": ["components/preferences/index.ts"],
+            "dependencies": ["game", "storage"]
+        },
+        "knob": {
+            "name": "knob",
+            "description": "iOS-style toggle switch for settings UI",
+            "files": [
+                "components/knob/index.ts",
+                "components/knob/knob.css"
+            ],
+            "dependencies": []
+        },
+        "grid": {
+            "name": "grid",
+            "description": "Generic 2D grid data structure with neighbor utilities",
+            "files": ["components/grid/index.ts"],
+            "dependencies": []
+        },
+        "draggable": {
+            "name": "draggable",
+            "description": "Drag-and-drop with touch support and collision detection",
+            "files": ["components/draggable/index.ts"],
+            "dependencies": []
+        },
+        "swipeable": {
+            "name": "swipeable",
+            "description": "Swipe gesture detection for touch devices",
+            "files": ["components/swipeable/index.ts"],
+            "dependencies": []
+        },
+        "theme": {
+            "name": "theme",
+            "description": "Theme manager with CSS variables and color utilities",
+            "files": [
+                "components/theme/index.ts",
+                "components/theme/utils.ts"
+            ],
+            "dependencies": []
+        }
+    }
+}
