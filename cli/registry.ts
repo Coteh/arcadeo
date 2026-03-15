@@ -9,8 +9,16 @@ export interface ComponentEntry {
     dependencies: string[];
 }
 
+export interface PluginEntry {
+    name: string;
+    description: string;
+    files: string[];
+    dependencies: string[];
+}
+
 export interface Registry {
     components: Record<string, ComponentEntry>;
+    plugins: Record<string, PluginEntry>;
 }
 
 export function getRegistry(): Registry {
@@ -22,7 +30,8 @@ export function getRegistry(): Registry {
         "registry.json"
     );
     if (fs.existsSync(localPath)) {
-        return fs.readJsonSync(localPath);
+        const data = fs.readJsonSync(localPath);
+        return { plugins: {}, ...data };
     }
 
     // Fallback to node_modules
@@ -34,7 +43,8 @@ export function getRegistry(): Registry {
         "registry.json"
     );
     if (fs.existsSync(nmPath)) {
-        return fs.readJsonSync(nmPath);
+        const data = fs.readJsonSync(nmPath);
+        return { plugins: {}, ...data };
     }
 
     throw new Error(

@@ -58,5 +58,13 @@
             ],
             "dependencies": []
         }
+    },
+    "plugins": {
+        "app-labels": {
+            "name": "app-labels",
+            "description": "Vite plugin for labeling app icons with environment tags using ImageMagick",
+            "files": ["plugins/app-labels.ts"],
+            "dependencies": []
+        }
     }
 }
