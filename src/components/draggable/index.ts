@@ -88,14 +88,16 @@ function findDropZone(
     dropZones: HTMLElement[]
 ): HTMLElement | null {
     const dragRect = dragged.getBoundingClientRect();
+    const centerX = dragRect.left + dragRect.width / 2;
+    const centerY = dragRect.top + dragRect.height / 2;
     for (const zone of dropZones) {
         if (zone === dragged) continue;
         const zoneRect = zone.getBoundingClientRect();
         if (
-            dragRect.left + dragRect.width >= zoneRect.left &&
-            dragRect.left <= zoneRect.left + zoneRect.width &&
-            dragRect.top + dragRect.height >= zoneRect.top &&
-            dragRect.top <= zoneRect.top + zoneRect.height
+            centerX >= zoneRect.left &&
+            centerX <= zoneRect.left + zoneRect.width &&
+            centerY >= zoneRect.top &&
+            centerY <= zoneRect.top + zoneRect.height
         ) {
             return zone;
         }
