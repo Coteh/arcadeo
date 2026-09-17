@@ -24,9 +24,7 @@ export default defineConfig([
         ],
         plugins: [
             typescript({
-                tsconfig: "./tsconfig.build.json",
-                declaration: true,
-                declarationDir: "./dist/types",
+                tsconfig: "./tsconfig.rollup.json",
             }),
             copy({
                 targets: [
