@@ -3,6 +3,7 @@ import fs from "fs-extra";
 import path from "path";
 import chalk from "chalk";
 import { getRegistry, type ComponentEntry } from "../registry";
+import { findArcadeoSrcDir } from "../paths";
 
 interface ArcadeoConfig {
     srcDir: string;
@@ -78,19 +79,9 @@ export const addCommand = new Command("add")
             process.exit(1);
         }
 
-        // Find arcadeo source directory (in node_modules or locally)
-        let arcadeoSrcDir = path.resolve(__dirname, "..", "..", "src");
-        if (!fs.existsSync(arcadeoSrcDir)) {
-            // Fallback: try node_modules
-            arcadeoSrcDir = path.resolve(
-                process.cwd(),
-                "node_modules",
-                "arcadeo",
-                "src"
-            );
-        }
-
-        if (!fs.existsSync(arcadeoSrcDir)) {
+        // Resolved via import.meta.url, not __dirname: this CLI is ESM.
+        const arcadeoSrcDir = findArcadeoSrcDir();
+        if (!arcadeoSrcDir) {
             console.error(
                 chalk.red("Could not find arcadeo source files.")
             );

@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
-import { fileURLToPath } from "url";
+import { findArcadeoSrcDir } from "./paths";
 
 export interface ComponentEntry {
     name: string;
@@ -14,30 +14,9 @@ export interface Registry {
 }
 
 export function getRegistry(): Registry {
-    // Try local src/registry.json first (for development)
-    const localPath = path.resolve(
-        path.dirname(fileURLToPath(import.meta.url)),
-        "..",
-        "src",
-        "registry.json"
-    );
-    if (fs.existsSync(localPath)) {
-        return fs.readJsonSync(localPath);
+    const srcDir = findArcadeoSrcDir();
+    if (!srcDir) {
+        throw new Error("Could not find registry.json. Is arcadeo installed?");
     }
-
-    // Fallback to node_modules
-    const nmPath = path.resolve(
-        process.cwd(),
-        "node_modules",
-        "arcadeo",
-        "src",
-        "registry.json"
-    );
-    if (fs.existsSync(nmPath)) {
-        return fs.readJsonSync(nmPath);
-    }
-
-    throw new Error(
-        "Could not find registry.json. Is arcadeo installed?"
-    );
+    return fs.readJsonSync(path.join(srcDir, "registry.json"));
 }
